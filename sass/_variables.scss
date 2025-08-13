@@ -1,0 +1,26 @@
+/* Variables y utilidades globales */
+$color-primary: #1746A2;
+$color-accent:  #F05941;
+$color-text:    #1a1a1a;
+$color-bg:      #f5f5f7;
+$color-white:   #fff;
+$color-border:  #ddd;
+
+$radius: 12px;
+$bp-md: 768px;
+
+$shadow-sm: 0 4px 12px rgba(0,0,0,.05);
+$shadow-md: 0 6px 16px rgba(0,0,0,.1);
+
+/* Mixins simples para reutilizar estilos */
+@mixin card {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: 1rem;
+  box-shadow: $shadow-sm;
+}
+@mixin smooth-hover {
+  transition: transform .3s ease, box-shadow .3s ease;
+  &:hover { transform: translateY(-3px); box-shadow: $shadow-md; }
+}

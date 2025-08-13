@@ -1,0 +1,51 @@
+@use 'variables' as *;
+
+/* Header pegajoso (sticky) */
+header {
+  position: sticky; top: 0; z-index: 1000;
+  background: $color-bg; transition: box-shadow .2s ease;
+  &.scrolled { box-shadow: $shadow-md; }
+
+  text-align: center;
+  padding-top: .75rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: clamp(2rem, 3.5vw, 2.6rem);
+    line-height: 1.05;
+    margin: .25rem 0 .5rem;
+    color: $color-primary;
+  }
+
+  nav {
+    display: flex; flex-direction: column; align-items: center;
+    gap: .5rem;
+
+    #menu-toggle {
+      font-size: 1.5rem; background: none; border: none; cursor: pointer;
+      color: $color-primary;
+      &:focus-visible { outline: 2px solid $color-accent; outline-offset: 2px; }
+    }
+
+    #menu {
+      display: none; list-style: none; padding-left: 0; margin: 0;
+      &.is-open { display: block; }
+      li + li { margin-top: .25rem; }
+      a {
+        display: inline-block; padding: .4rem .6rem; border-radius: 8px;
+        &:hover, &:focus-visible { background-color: rgba(23,70,162,.08); }
+        &.active { background-color: rgba(23,70,162,.12); font-weight: 700; }
+      }
+    }
+  }
+
+  /* Escritorio: nombre centrado y menú debajo, en fila */
+  @media (min-width: $bp-md) {
+    nav {
+      #menu-toggle { display: none !important; }
+      #menu { display: flex !important; gap: 1.25rem; align-items: center; }
+      #menu li + li { margin-top: 0; }
+      #menu a { padding: .35rem .6rem; }
+    }
+  }
+}

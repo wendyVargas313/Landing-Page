@@ -1,0 +1,47 @@
+@use 'variables' as *;
+
+/* Contacto */
+#contacto {
+  /* Separación del header al anclar */
+  scroll-margin-top: 100px;
+
+  .contacto-grid {
+    display: grid;
+    gap: 1.25rem;
+    align-items: center;
+
+    /* Móvil: datos arriba, foto abajo (centrada) */
+    grid-template-columns: 1fr;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 3px solid #ccc;
+      width: 180px; height: 180px; object-fit: cover;
+    }
+
+    .datos {
+      display: grid;
+      gap: .4rem;
+
+      /* URLs largas no se salen */
+      a { overflow-wrap: anywhere; word-break: break-word; }
+    }
+  }
+
+  /* Desktop: datos a la izquierda, foto a la derecha */
+  @media (min-width: $bp-md) {
+    .contacto-grid {
+      grid-template-columns: 1fr 220px;
+      column-gap: 2rem;
+
+      .datos {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 2rem;
+        row-gap: .25rem;
+        p { margin: .25rem 0; }
+      }
+    }
+  }
+}
