@@ -1,193 +1,252 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registro de Usuario — Validación Frontend</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
-  <script src="assets/js/validation.js" defer></script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1>Registro de usuario</h1>
-      <p class="subtitle">Ejemplo guiado con validaciones en frontend (HTML5 + JavaScript)</p>
-    </div>
-  </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de Usuario — Validación Frontend</title>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script src="assets/js/validation.js" defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrapper">
+        <h1>Registro de usuario</h1>
+        <p class="subtitle">
+          Ejemplo guiado con validaciones en frontend (HTML5 + JavaScript)
+        </p>
+      </div>
+    </header>
 
-  <main id="contenido-principal">
-    <!--
+    <main id="contenido-principal">
+      <!--
       SECTION principal con el formulario de registro.
       Usamos etiquetas semánticas y agrupamos campos relacionados con <fieldset>.
     -->
-    <section aria-labelledby="titulo-formulario" class="wrapper">
-      <h2 id="titulo-formulario">Crea tu cuenta</h2>
+      <section aria-labelledby="titulo-formulario" class="wrapper">
+        <h2 id="titulo-formulario">Crea tu cuenta</h2>
 
-      <!--
+        <!--
         Usamos "novalidate" para desactivar los tooltips nativos del navegador y
         manejar los mensajes de error de forma personalizada, pero seguimos
         aprovechando la Constraint Validation API (checkValidity, validity, etc.).
       -->
-      <form id="formRegistro" novalidate>
-        <fieldset>
-          <legend>Datos personales</legend>
+        <form id="formRegistro" novalidate>
+          <fieldset>
+            <legend>Datos personales</legend>
 
-          <!-- Nombre completo -->
+            <!-- Nombre completo -->
+            <div class="form-control">
+              <label for="nombre"
+                >Nombre completo <span aria-hidden="true">*</span></label
+              >
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                required
+                minlength="3"
+                autocomplete="name"
+                placeholder="Ej. María Fernanda Rojas"
+                title="Escribe tu nombre completo (mínimo 3 caracteres)."
+                aria-describedby="nombre-error"
+              />
+              <p id="nombre-error" class="error-message" aria-live="polite"></p>
+            </div>
+
+            <!-- Correo electrónico -->
+            <div class="form-control">
+              <label for="email"
+                >Correo electrónico <span aria-hidden="true">*</span></label
+              >
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="tucorreo@dominio.com"
+                title="Ingresa un correo válido (ej. usuario@dominio.com)."
+                aria-describedby="email-error"
+              />
+              <p id="email-error" class="error-message" aria-live="polite"></p>
+            </div>
+
+            <!-- Fecha de nacimiento -->
+            <div class="form-control">
+              <label for="fechaNacimiento"
+                >Fecha de nacimiento <span aria-hidden="true">*</span></label
+              >
+              <input
+                id="fechaNacimiento"
+                name="fechaNacimiento"
+                type="date"
+                required
+                aria-describedby="fechaNacimiento-error"
+                title="Debes tener 18 años o más."
+              />
+              <p
+                id="fechaNacimiento-error"
+                class="error-message"
+                aria-live="polite"
+              ></p>
+            </div>
+
+            <!-- Celular (Colombia) -->
+            <div class="form-control">
+              <label for="celular"
+                >Celular (Colombia) <span aria-hidden="true">*</span></label
+              >
+              <input
+                id="celular"
+                name="celular"
+                type="tel"
+                required
+                autocomplete="tel"
+                placeholder="+57 3XX XXX XXXX"
+                pattern="^(?:\+57\s?)?(3\d{2})[\s.-]?\d{3}[\s.-]?\d{4}$"
+                title="Formato colombiano: inicia en 3 y tiene 10 dígitos. Ej: 3XX XXX XXXX (opcional +57)."
+                aria-describedby="celular-error"
+              />
+              <p
+                id="celular-error"
+                class="error-message"
+                aria-live="polite"
+              ></p>
+            </div>
+
+            <!-- Teléfono fijo / alterno (opcional) -->
+            <div class="form-control">
+              <label for="telefono">Número de teléfono (opcional)</label>
+              <input
+                id="telefono"
+                name="telefono"
+                type="tel"
+                autocomplete="tel"
+                placeholder="(601) 234-5678"
+                pattern="^[\d\s().+-]{10,}$"
+                title="Si lo ingresas, debe tener al menos 10 dígitos."
+                aria-describedby="telefono-error"
+              />
+              <p
+                id="telefono-error"
+                class="error-message"
+                aria-live="polite"
+              ></p>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Seguridad</legend>
+
+            <!-- Contraseña -->
+            <div class="form-control">
+              <label for="password"
+                >Contraseña <span aria-hidden="true">*</span></label
+              >
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                placeholder="Mín. 8 caracteres"
+                pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$"
+                title="Debe tener mínimo 8 caracteres, una mayúscula, un número y un carácter especial."
+                aria-describedby="password-help password-error"
+              />
+              <small id="password-help" class="help">
+                Debe incluir: <strong>1 mayúscula</strong>,
+                <strong>1 número</strong> y
+                <strong>1 carácter especial</strong>.
+              </small>
+              <p
+                id="password-error"
+                class="error-message"
+                aria-live="polite"
+              ></p>
+            </div>
+
+            <!-- Confirmar contraseña -->
+            <div class="form-control">
+              <label for="confirmPassword"
+                >Confirmar contraseña <span aria-hidden="true">*</span></label
+              >
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                required
+                autocomplete="new-password"
+                placeholder="Repite tu contraseña"
+                aria-describedby="confirmPassword-error"
+                title="Debe coincidir exactamente con la contraseña."
+              />
+              <p
+                id="confirmPassword-error"
+                class="error-message"
+                aria-live="polite"
+              ></p>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Consentimiento</legend>
+
+            <!-- Aceptación de términos -->
+            <div class="form-control form-control--checkbox">
+              <input
+                id="terminos"
+                name="terminos"
+                type="checkbox"
+                required
+                aria-describedby="terminos-error"
+              />
+              <label for="terminos">Acepto los términos y condiciones</label>
+            </div>
+            <p id="terminos-error" class="error-message" aria-live="polite"></p>
+          </fieldset>
+
+          <!-- reCAPTCHA -->
           <div class="form-control">
-            <label for="nombre">Nombre completo <span aria-hidden="true">*</span></label>
+            <div
+              class="g-recaptcha"
+              data-sitekey="6Ldz3LsrAAAAANPBq7yzvWQnHbwwDeUO0nNu-9GK"
+              data-callback="onCaptchaSuccess"
+              data-expired-callback="onCaptchaExpired"
+            ></div>
+
+            <!-- input oculto para usar tu setFieldState y checkValidity() -->
             <input
-              id="nombre"
-              name="nombre"
+              id="captcha"
+              name="captcha"
               type="text"
               required
-              minlength="3"
-              autocomplete="name"
-              placeholder="Ej. María Fernanda Rojas"
-              title="Escribe tu nombre completo (mínimo 3 caracteres)."
-              aria-describedby="nombre-error"
+              hidden
+              aria-hidden="true"
             />
-            <p id="nombre-error" class="error-message" aria-live="polite"></p>
+            <p id="captcha-error" class="error-message" aria-live="polite"></p>
           </div>
 
-          <!-- Correo electrónico -->
-          <div class="form-control">
-            <label for="email">Correo electrónico <span aria-hidden="true">*</span></label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autocomplete="email"
-              placeholder="tucorreo@dominio.com"
-              title="Ingresa un correo válido (ej. usuario@dominio.com)."
-              aria-describedby="email-error"
-            />
-            <p id="email-error" class="error-message" aria-live="polite"></p>
+          <div class="form-actions">
+            <button id="btnSubmit" type="submit" disabled>Enviar</button>
+            <button type="reset" class="secondary">Limpiar</button>
           </div>
 
-          <!-- Fecha de nacimiento -->
-          <div class="form-control">
-            <label for="fechaNacimiento">Fecha de nacimiento <span aria-hidden="true">*</span></label>
-            <input
-              id="fechaNacimiento"
-              name="fechaNacimiento"
-              type="date"
-              required
-              aria-describedby="fechaNacimiento-error"
-              title="Debes tener 18 años o más."
-            />
-            <p id="fechaNacimiento-error" class="error-message" aria-live="polite"></p>
-          </div>
+          <!-- Mensaje de confirmación accesible -->
+          <p id="form-success" class="success" role="status" hidden>
+            ¡Formulario válido! Tus datos están listos para enviarse al
+            servidor.
+          </p>
+        </form>
+      </section>
+    </main>
 
-          <!-- Celular (Colombia) -->
-          <div class="form-control">
-            <label for="celular">Celular (Colombia) <span aria-hidden="true">*</span></label>
-            <input
-              id="celular"
-              name="celular"
-              type="tel"
-              required
-              autocomplete="tel"
-              placeholder="+57 3XX XXX XXXX"
-              pattern="^(?:\+57\s?)?(3\d{2})[\s.-]?\d{3}[\s.-]?\d{4}$"
-              title="Formato colombiano: inicia en 3 y tiene 10 dígitos. Ej: 3XX XXX XXXX (opcional +57)."
-              aria-describedby="celular-error"
-            />
-            <p id="celular-error" class="error-message" aria-live="polite"></p>
-          </div>
-
-          <!-- Teléfono fijo / alterno (opcional) -->
-          <div class="form-control">
-            <label for="telefono">Número de teléfono (opcional)</label>
-            <input
-              id="telefono"
-              name="telefono"
-              type="tel"
-              autocomplete="tel"
-              placeholder="(601) 234-5678"
-              pattern="^[\d\s().+-]{10,}$"
-              title="Si lo ingresas, debe tener al menos 10 dígitos."
-              aria-describedby="telefono-error"
-            />
-            <p id="telefono-error" class="error-message" aria-live="polite"></p>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Seguridad</legend>
-
-          <!-- Contraseña -->
-          <div class="form-control">
-            <label for="password">Contraseña <span aria-hidden="true">*</span></label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              minlength="8"
-              autocomplete="new-password"
-              placeholder="Mín. 8 caracteres"
-              pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$"
-              title="Debe tener mínimo 8 caracteres, una mayúscula, un número y un carácter especial."
-              aria-describedby="password-help password-error"
-            />
-            <small id="password-help" class="help">
-              Debe incluir: <strong>1 mayúscula</strong>, <strong>1 número</strong> y <strong>1 carácter especial</strong>.
-            </small>
-            <p id="password-error" class="error-message" aria-live="polite"></p>
-          </div>
-
-          <!-- Confirmar contraseña -->
-          <div class="form-control">
-            <label for="confirmPassword">Confirmar contraseña <span aria-hidden="true">*</span></label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              autocomplete="new-password"
-              placeholder="Repite tu contraseña"
-              aria-describedby="confirmPassword-error"
-              title="Debe coincidir exactamente con la contraseña."
-            />
-            <p id="confirmPassword-error" class="error-message" aria-live="polite"></p>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Consentimiento</legend>
-
-          <!-- Aceptación de términos -->
-          <div class="form-control form-control--checkbox">
-            <input
-              id="terminos"
-              name="terminos"
-              type="checkbox"
-              required
-              aria-describedby="terminos-error"
-            />
-            <label for="terminos">Acepto los términos y condiciones</label>
-          </div>
-          <p id="terminos-error" class="error-message" aria-live="polite"></p>
-        </fieldset>
-
-        <div class="form-actions">
-          <button id="btnSubmit" type="submit" disabled>Enviar</button>
-          <button type="reset" class="secondary">Limpiar</button>
-        </div>
-
-        <!-- Mensaje de confirmación accesible -->
-        <p id="form-success" class="success" role="status" hidden>
-          ¡Formulario válido! Tus datos están listos para enviarse al servidor.
-        </p>
-      </form>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrapper">
-      <small>Ejemplo académico · Validaciones en Frontend</small>
-    </div>
-  </footer>
-</body>
+    <footer class="site-footer">
+      <div class="wrapper">
+        <small>Ejemplo académico · Validaciones en Frontend</small>
+      </div>
+    </footer>
+  </body>
 </html>

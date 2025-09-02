@@ -12,8 +12,36 @@ document.addEventListener("DOMContentLoaded", () => {
   const password = document.getElementById("password");
   const confirmPassword = document.getElementById("confirmPassword");
   const terminos = document.getElementById("terminos");
+  const captcha = document.getElementById("captcha");
 
-  // === Utilidades ===
+  //validador del captcha (usa grecaptcha)
+  function validateCaptcha() {
+    const token = (window.grecaptcha && grecaptcha.getResponse()) || "";
+    const isValid = token.length > 0;
+
+     //rellenar el input oculto para satisfacer "required"
+  captcha.value = isValid ? token : "";
+
+    setFieldState(
+      captcha,
+      isValid,
+      isValid ? "" : "Por favor marca la casilla 'No soy un robot'."
+    );
+    return isValid;
+  }
+
+  //callbacks globales:
+  window.onCaptchaSuccess = function () {
+    validateCaptcha();
+    updateSubmitState();
+  };
+
+  window.onCaptchaExpired = function () {
+  if (window.grecaptcha) grecaptcha.reset();
+  captcha.value = "";                        // <<< limpia el valor
+  setFieldState(captcha, false, "El captcha expiró. Vuelve a marcarlo.");
+  updateSubmitState();
+};
 
   /** Aplica estilos y mensaje de error para un campo */
   function setFieldState(input, isValid, message = "") {
@@ -224,6 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
     validatePassword,
     validateConfirmPassword,
     validateTerminos,
+    validateCaptcha,
   ].forEach((fn) => fn());
   updateSubmitState();
 
@@ -241,6 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
       validatePassword,
       validateConfirmPassword,
       validateTerminos,
+      validateCaptcha,
     ].forEach((fn) => fn());
     updateSubmitState();
 
