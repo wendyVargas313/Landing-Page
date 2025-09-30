@@ -3,6 +3,7 @@
 @use 'teaser';
 @use 'personal';
 @use 'skills';
+@import "footer";
 
 /* Que cualquier ancla no quede tapada por el header sticky */
 [id] { scroll-margin-top: 100px; }

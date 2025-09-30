@@ -13,14 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmPassword = document.getElementById("confirmPassword");
   const terminos = document.getElementById("terminos");
   const captcha = document.getElementById("captcha");
+  const touched = new Set(); // ids de campos “tocados”
+  let submitted = false; // se vuelve true al intentar enviar
 
   //validador del captcha (usa grecaptcha)
   function validateCaptcha() {
     const token = (window.grecaptcha && grecaptcha.getResponse()) || "";
     const isValid = token.length > 0;
 
-     //rellenar el input oculto para satisfacer "required"
-  captcha.value = isValid ? token : "";
+    //rellenar el input oculto para satisfacer "required"
+    captcha.value = isValid ? token : "";
 
     setFieldState(
       captcha,
@@ -37,26 +39,29 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.onCaptchaExpired = function () {
-  if (window.grecaptcha) grecaptcha.reset();
-  captcha.value = "";                        // <<< limpia el valor
-  setFieldState(captcha, false, "El captcha expiró. Vuelve a marcarlo.");
-  updateSubmitState();
-};
+    if (window.grecaptcha) grecaptcha.reset();
+    captcha.value = ""; // <<< limpia el valor
+    setFieldState(captcha, false, "El captcha expiró. Vuelve a marcarlo.");
+    updateSubmitState();
+  };
 
   /** Aplica estilos y mensaje de error para un campo */
   function setFieldState(input, isValid, message = "") {
     const errorEl = document.getElementById(`${input.id}-error`);
-    if (isValid) {
-      input.classList.remove("is-invalid");
-      input.classList.add("is-valid");
-      input.setCustomValidity("");
-      if (errorEl) errorEl.textContent = "";
+
+    // Clases visuales solo si el usuario ya tocó el campo o hubo submit
+    if (shouldShow(input)) {
+      input.classList.toggle("is-invalid", !isValid);
+      input.classList.toggle("is-valid", isValid);
+      if (errorEl) errorEl.textContent = isValid ? "" : message;
     } else {
-      input.classList.remove("is-valid");
-      input.classList.add("is-invalid");
-      input.setCustomValidity(message || "Campo inválido");
-      if (errorEl) errorEl.textContent = message;
+      // Estado inicial: sin clases y sin texto
+      input.classList.remove("is-invalid", "is-valid");
+      if (errorEl) errorEl.textContent = "";
     }
+
+    // Mantén la validez del navegador (para habilitar/deshabilitar el botón)
+    input.setCustomValidity(isValid ? "" : message || "Campo inválido");
   }
 
   /** Habilita/deshabilita el botón de enviar según la validez global */
@@ -197,6 +202,27 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  // Marca un campo como "tocado" cuando pierde el foco
+  [
+    nombre,
+    email,
+    fechaNacimiento,
+    celular,
+    telefono,
+    password,
+    confirmPassword,
+    terminos,
+    captcha,
+  ].forEach((el) => {
+    el.addEventListener("blur", () => touched.add(el.id));
+    // Si el usuario empieza a escribir, también lo consideramos "tocado"
+    el.addEventListener("input", () => {
+      if (el.type !== "checkbox" && el.value.trim() !== "") {
+        touched.add(el.id);
+      }
+    });
+  });
+
   // === Listeners por campo para validación en vivo ===
   nombre.addEventListener("input", () => {
     validateNombre();
@@ -242,25 +268,18 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaNacimiento.setAttribute("max", `${yyyy}-${mm}-${dd}`);
   })();
 
-  // 2) Validación inicial (por si el navegador autocompleta)
-  [
-    validateNombre,
-    validateEmail,
-    validateFechaNacimiento,
-    validateCelular,
-    validateTelefono,
-    validatePassword,
-    validateConfirmPassword,
-    validateTerminos,
-    validateCaptcha,
-  ].forEach((fn) => fn());
+  function shouldShow(input) {
+    return touched.has(input.id) || submitted;
+  }
+
   updateSubmitState();
 
   // === Envío del formulario ===
   form.addEventListener("submit", (e) => {
     // Prevenimos el envío real; en un proyecto real aquí enviaríamos al backend.
     e.preventDefault();
-    // Forzamos validación final
+    submitted = true; // ahora sí se muestran todos los mensajes
+
     [
       validateNombre,
       validateEmail,
@@ -275,34 +294,53 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSubmitState();
 
     if (form.checkValidity()) {
-      // Mostramos confirmación accesible, "simulando" éxito
-      successMsg.hidden = false;
-      // Aquí podrías construir FormData y hacer fetch(...) al servidor
-      // const data = Object.fromEntries(new FormData(form).entries());
-      // console.log("Datos validados listos para enviar:", data);
+      const fd = new FormData(form);
 
-      // Limpiar el formulario después de un pequeño delay para que el usuario vea el mensaje
-      setTimeout(() => {
-        form.reset();
-        // Limpiamos estados visuales
-        [
-          nombre,
-          email,
-          fechaNacimiento,
-          celular,
-          telefono,
-          password,
-          confirmPassword,
-          terminos,
-        ].forEach((el) => {
-          el.classList.remove("is-valid", "is-invalid");
+      fetch("http://localhost:8000/api/contacto/", {
+        method: "POST",
+        body: fd,
+      })
+        .then(async (res) => {
+          if (!res.ok) {
+            const data = await res.json();
+            // Muestra errores devueltos por el backend en tus campos
+            for (const [key, val] of Object.entries(data)) {
+              const input =
+                document.getElementById(key) ||
+                document.querySelector(`[name="${key}"]`);
+              if (input)
+                setFieldState(
+                  input,
+                  false,
+                  Array.isArray(val) ? val.join(" ") : String(val)
+                );
+            }
+            throw new Error("Error en el envío");
+          }
+          return res.json();
+        })
+        .then(() => {
+          successMsg.hidden = false;
+          setTimeout(() => {
+            form.reset();
+            document
+              .querySelectorAll(".is-valid, .is-invalid")
+              .forEach((el) => el.classList.remove("is-valid", "is-invalid"));
+            document
+              .querySelectorAll(".error-message")
+              .forEach((el) => (el.textContent = ""));
+            touched.clear();
+            submitted = false;
+            if (window.grecaptcha) grecaptcha.reset();
+            successMsg.hidden = true;
+            updateSubmitState();
+          }, 800);
+        })
+        .catch((err) => {
+          console.error(err);
         });
-        // Limpiamos mensajes
-        document
-          .querySelectorAll(".error-message")
-          .forEach((el) => (el.textContent = ""));
-        updateSubmitState();
-      }, 800);
+
+      return; // evitar que sigan los resets simulados
     } else {
       successMsg.hidden = true;
     }

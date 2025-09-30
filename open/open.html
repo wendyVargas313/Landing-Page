@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Open — Catálogo</title>
+    <meta name="description" content="Vista en formato grid de ítems gestionados desde el CMS." />
+    <link rel="icon" href="assets/favicon.ico" />
+    <!-- CSS compilado (lo crearemos luego) -->
+    <link rel="stylesheet" href="../assets/css/open.css" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <!-- Encabezado de la página -->
+    <header class="site-header" role="banner">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="../index.html">Inicio</a></li>
+          <li aria-current="page">Open</li>
+        </ol>
+      </nav>
+      <h1 class="page-title">Open</h1>
+      <p class="page-intro">
+        Catálogo de libros
+      </p>
+    </header>
+
+    <!-- Contenido principal -->
+    <main id="contenido" class="open" aria-labelledby="open-heading">
+      <h2 id="open-heading" class="sr-only">Listado de ítems</h2>
+
+      <!-- Controles (opcionales). Mantén semántica simple; los conectaremos con JS después. -->
+      <section class="open__toolbar" aria-label="Herramientas de filtrado y búsqueda">
+        <div class="open__search" role="search">
+          <label for="open-search" class="open__search-label">Buscar</label>
+          <input
+            id="open-search"
+            class="open__search-input"
+            type="search"
+            name="q"
+            placeholder="Buscar por título, palabras clave…"
+            autocomplete="off"
+            inputmode="search"
+          />
+        </div>
+      </section>
+
+      <!-- Grid donde se montan las tarjetas -->
+      <section id="open-grid" class="open-grid" aria-live="polite" aria-busy="true">
+        <!-- Estado inicial accesible -->
+        <div class="open__status" role="status">Cargando ítems…</div>
+      </section>
+
+      <!-- Template de tarjeta (lo clonará el JS). Mantén estructura semántica. -->
+      <template id="tpl-open-card">
+        <article class="card" role="listitem">
+          <figure class="card__media">
+            <!-- La imagen y su alt se establecerán por JS -->
+            <img class="card__img" src="" alt="" loading="lazy" decoding="async" />
+            <figcaption class="card__caption">
+              <!-- Resumen corto / tagline -->
+              <p class="card__summary"></p>
+            </figcaption>
+          </figure>
+
+          <div class="card__body">
+            <h3 class="card__title"></h3>
+            <!-- Descripción ampliada, permite HTML básico desde el CMS (sanitizado en backend) -->
+            <div class="card__description"></div>
+
+            <!-- Palabras clave: lista etiquetada y navegable -->
+            <ul class="card__tags" aria-label="Palabras clave"></ul>
+
+            <!-- Enlace a la vista de detalle -->
+            <p class="card__actions">
+              <a class="card__link" href="#">
+                Ver detalle
+                <span class="sr-only"> del ítem</span>
+              </a>
+            </p>
+          </div>
+        </article>
+      </template>
+
+      <!-- Fallback sin JavaScript -->
+      <noscript>
+        <section aria-label="Vista sin JavaScript">
+          <p>
+            Activa JavaScript para ver el catálogo dinámico. A continuación, un ejemplo estático:
+          </p>
+          <div class="open-grid">
+            <article class="card">
+              <figure class="card__media">
+                <img class="card__img" src="assets/images/placeholder.png" alt="Portada de ejemplo" />
+                <figcaption class="card__caption">
+                  <p class="card__summary">Resumen corto de ejemplo.</p>
+                </figcaption>
+              </figure>
+              <div class="card__body">
+                <h3 class="card__title">Título de ejemplo</h3>
+                <div class="card__description">
+                  <p>Descripción de ejemplo administrada desde el CMS.</p>
+                </div>
+                <ul class="card__tags" aria-label="Palabras clave">
+                  <li><span class="tag">Demo</span></li>
+                  <li><span class="tag">Accesible</span></li>
+                </ul>
+                <p class="card__actions"><a class="card__link" href="#">Ver detalle</a></p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </noscript>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <p>&copy; <span id="year"></span> Wendy Vargas. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Utilidad mínima (no bloqueante) -->
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      document.documentElement.classList.remove("no-js");
+    </script>
+    <!-- JS del módulo (lo haremos en el siguiente paso) -->
+    <script type="module" src="../assets/js/open.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,297 @@
+// sass/_faq.scss
+@use "variables" as v;
+
+// Aliases locales
+$radius: v.$radius;
+$border: 1px solid v.$color-border;
+
+$clr-text:  v.$color-text;
+$clr-muted: #555; // puedes crear $color-muted en _variables.scss si lo prefieres
+$clr-link:  v.$color-primary;
+
+/* -------------------------------------------------------------------------- */
+/* FAQ                                                                        */
+/* -------------------------------------------------------------------------- */
+
+.faq {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 1rem;
+
+  &__search {
+    margin-block: 1rem 1.25rem;
+
+    &-label {
+      display: inline-block;
+      font-weight: 600;
+      margin-bottom: .35rem;
+    }
+    &-input {
+      width: min(720px, 100%);
+      padding: .9rem 2.5rem .9rem 2.5rem; // espacio para el ícono
+      border: $border;
+      border-radius: $radius;
+      font: inherit;
+      outline: none;
+      background:
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>')
+        no-repeat 12px center #fff;
+      background-size: 20px 20px;
+      transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease, transform .12s ease;
+
+      &:focus-visible {
+        border-color: $clr-link;
+        box-shadow: 0 0 0 .25rem rgba(11,103,255,.18);
+        background-color: #fbfdff;
+        transform: translateY(-1px);
+      }
+    }
+    &-help {
+      margin-top: .4rem;
+      font-size: .9rem;
+      color: $clr-muted;
+    }
+  }
+
+  &__root {
+    display: grid;
+    gap: 1.25rem;
+
+    .faq__status,
+    .faq__error {
+      position: relative;
+      border: $border;
+      border-radius: $radius;
+      padding: 1rem 1rem 1rem 2.5rem;
+      background: v.$color-white;
+      box-shadow: 0 1px 0 rgba(0,0,0,.03);
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: .85rem; top: 50%; translate: 0 -50%;
+        inline-size: 1rem; block-size: 1rem;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #bcd2ff, #8fb0ff);
+        box-shadow: 0 0 0 3px rgba(11,103,255,.12);
+      }
+    }
+    .faq__error {
+      border-color: #ffd5d5;
+      background: #fff6f6;
+      color: #7a0000;
+
+      &::before {
+        background: linear-gradient(180deg, #ffc4c4, #ff8f8f);
+        box-shadow: 0 0 0 3px rgba(255,0,0,.08);
+      }
+    }
+  }
+}
+
+/* Categorías */
+.faq-category {
+  &__title {
+    display: inline-block;
+    font-size: .95rem;
+    color: $clr-link;
+    background: rgba(11,103,255,.08);
+    border: 1px solid rgba(11,103,255,.18);
+    padding: .25rem .5rem;
+    border-radius: 999px;
+    margin: .25rem 0;
+  }
+
+  &__list {
+    border: $border;
+    border-radius: $radius;
+    overflow: clip;
+    background: v.$color-white;
+    box-shadow: 0 6px 22px rgba(16,24,40,.08), 0 1px 2px rgba(16,24,40,.04);
+  }
+}
+
+/* Ítems */
+.faq-item {
+  + .faq-item { border-top: 1px solid #f3f3f3; }
+
+  &__question { margin: 0; }
+
+  &__toggle {
+    width: 100%;
+    text-align: left;
+    background: v.$color-white;
+    border: 0;
+    padding: 1.1rem 1.25rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .75rem;
+    align-items: center;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background-color .18s ease, box-shadow .18s ease, color .18s ease, transform .12s ease;
+
+    &:hover { background: #fafafa; }
+
+    &:active {
+      background: #f3f6ff;
+      transform: translateY(0.5px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid $clr-link;
+      outline-offset: 2px;
+      border-radius: 8px;
+      box-shadow: 0 0 0 .15rem rgba(11,103,255,.12);
+    }
+
+    /* Estado abierto: resalta el encabezado */
+    &[aria-expanded="true"] {
+      background: linear-gradient(180deg, #f7faff 0%, #ffffff 100%);
+      box-shadow: inset 3px 0 0 0 $clr-link, 0 1px 0 rgba(0,0,0,.03);
+    }
+
+    &[aria-expanded="true"] .faq-item__icon {
+      transform: rotate(-180deg);
+      color: $clr-link;
+    }
+  }
+
+  &__qtext {
+    color: $clr-text;
+    font-size: 1.05rem;
+  }
+
+  /* Chevron dibujado con CSS */
+  &__icon {
+    position: relative;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    display: grid;
+    place-items: center;
+    color: $clr-muted;
+    transition: transform .2s ease, color .2s ease;
+    font-size: 0;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      inline-size: .6rem;
+      block-size: .6rem;
+      border-right: .16rem solid currentColor;
+      border-bottom: .16rem solid currentColor;
+      transform: rotate(45deg);
+      transition: transform .2s ease;
+    }
+  }
+
+  &__answer {
+    padding: 0 1.25rem 1rem;
+
+    @media (prefers-reduced-motion: no-preference) {
+      &[hidden] {
+        display: block;
+        height: 0;
+        padding-bottom: 0;
+        overflow: hidden;
+      }
+      &.reveal { animation: faq-slide-down .22s ease-out forwards; }
+      &.hide   { animation: faq-slide-up   .18s ease-in  forwards; }
+    }
+
+    /* Fondo sutil para diferenciar la respuesta */
+    &:not([hidden]) {
+      background: linear-gradient(180deg, #fbfcff 0%, #ffffff 100%);
+      border-top: 1px solid #f2f5ff;
+    }
+  }
+
+  &__content {
+    color: $clr-text;
+    line-height: 1.7;
+
+    p + p { margin-top: .5rem; }
+
+    a {
+      color: $clr-link;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1.5px;
+    }
+    ul, ol { padding-left: 1.25rem; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      background: #f7f8fa;
+      border: 1px solid #eef0f4;
+      border-radius: 8px;
+      padding: .15rem .35rem;
+    }
+    pre { padding: .75rem; overflow: auto; }
+  }
+}
+
+/* Header */
+.site-header {
+  padding: 1rem;
+  max-width: 900px;
+  margin-inline: auto;
+
+  .page-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+    margin: .25rem 0;
+    background: linear-gradient(90deg, #0b67ff 0%, #8fb0ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .page-intro {
+    color: $clr-muted;
+    margin: 0 0 1rem;
+  }
+}
+
+.breadcrumb {
+  font-size: .95rem;
+  color: $clr-muted;
+  margin: .25rem 0 .5rem;
+
+  ol { display: inline; padding: 0; margin: 0; list-style: none; }
+  li { display: inline; }
+  li + li::before { content: " / "; color: #bbb; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px; height: 1px;
+  overflow: hidden;
+
+  &:focus {
+    left: 1rem; top: 1rem;
+    width: auto; height: auto;
+    background: #000; color: #fff;
+    padding: .5rem .75rem;
+    border-radius: 8px;
+    z-index: 1000;
+  }
+}
+
+/* Animaciones */
+@keyframes faq-slide-down {
+  from { height: 0; opacity: .35; }
+  to   { height: var(--h); opacity: 1; }
+}
+@keyframes faq-slide-up {
+  from { height: var(--h); opacity: 1; }
+  to   { height: 0; opacity: .35; }
+}
+
+/* Responsivo */
+@media (min-width: v.$bp-md) {
+  .faq { padding: 1.25rem; }
+}
+

@@ -1,0 +1,16 @@
+// sass/fyq.scss
+@use "variables" as *; // usa tus tokens si existen en _variables.scss
+@use "faq";            // importa el módulo de FAQ
+
+// (Opcional) resets mínimos específicos de esta página:
+:root {
+  // Fallbacks por si tus variables no existen:
+  --c-text: #222;
+  --c-muted: #555;
+  --c-border: #eaeaea;
+  --c-primary: #0b67ff;
+  --radius: 12px;
+}
+
+html { scroll-behavior: smooth; }
+body { color: var(--c-text); }

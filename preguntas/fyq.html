@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preguntas frecuentes | Wendy</title>
+    <meta
+      name="description"
+      content="Resuelve tus dudas con las preguntas frecuentes. Usa el buscador o expande cada respuesta."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="../assets/favicon.ico" />
+    <!-- CSS principal del módulo de FAQ (compilado desde SASS) -->
+    <link rel="stylesheet" href="../assets/css/fyq.css" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="site-header" role="banner">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="../index.html">Inicio</a></li>
+          <li aria-current="page">Preguntas frecuentes</li>
+        </ol>
+      </nav>
+      <h1 class="page-title">Preguntas Frecuentes (FAQ)</h1>
+      <p class="page-intro">
+        Encuentra respuestas rápidas. Puedes buscar o expandir cada pregunta.
+      </p>
+    </header>
+
+    <main id="contenido" class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="sr-only">
+        Listado de preguntas y respuestas
+      </h2>
+
+      <!-- Buscador accesible -->
+      <section
+        class="faq__search"
+        role="search"
+        aria-label="Buscar en preguntas frecuentes"
+      >
+        <label for="faq-search" class="faq__search-label">Buscar</label>
+        <input
+          id="faq-search"
+          class="faq__search-input"
+          type="search"
+          name="q"
+          placeholder="Escribe una palabra clave…"
+          autocomplete="off"
+          inputmode="search"
+          aria-describedby="faq-search-help"
+        />
+        <p id="faq-search-help" class="faq__search-help">
+          Filtra por texto en la pregunta o en la respuesta.
+        </p>
+      </section>
+
+      <!-- Contenedor donde se montarán categorías e ítems -->
+      <section
+        id="faq-root"
+        class="faq__root"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <!-- Mensaje inicial accesible -->
+        <div class="faq__status" role="status">Cargando preguntas…</div>
+      </section>
+
+      <!-- Templates para renderizado por JS -->
+      <template id="tpl-faq-category">
+        <section class="faq-category" data-category>
+          <h3 class="faq-category__title"></h3>
+          <div class="faq-category__list" role="list"></div>
+        </section>
+      </template>
+
+      <template id="tpl-faq-item">
+        <article class="faq-item" role="listitem">
+          <h4 class="faq-item__question">
+            <button
+              type="button"
+              class="faq-item__toggle"
+              data-faq-toggle
+              aria-expanded="false"
+              aria-controls=""
+            >
+              <span class="faq-item__qtext"></span>
+              <span class="faq-item__icon" aria-hidden="true">▼</span>
+            </button>
+          </h4>
+          <div
+            class="faq-item__answer"
+            id=""
+            role="region"
+            aria-labelledby=""
+            hidden
+          >
+            <div class="faq-item__content"></div>
+          </div>
+        </article>
+      </template>
+
+      <noscript>
+        <section
+          class="faq__noscript"
+          aria-label="Preguntas frecuentes (modo sin JavaScript)"
+        >
+          <p>
+            Tu navegador tiene deshabilitado JavaScript. A continuación, un
+            ejemplo de visualización básica:
+          </p>
+          <details>
+            <summary>
+              <strong>¿Cómo funcionan las preguntas frecuentes?</strong>
+            </summary>
+            <div>
+              Esta sección se carga dinámicamente desde el CMS cuando JavaScript
+              está habilitado.
+            </div>
+          </details>
+        </section>
+      </noscript>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <p>
+        &copy; <span id="year"></span> Wendy Vargas. Todos los derechos
+        reservados.
+      </p>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent =
+        new Date().getFullYear();
+      document.documentElement.classList.remove("no-js");
+    </script>
+    <script type="module" src="../assets/js/fyq.js" defer></script>
+  </body>
+</html>
+

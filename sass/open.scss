@@ -1,0 +1,25 @@
+// sass/open.scss
+@use "variables" as *;
+@use "_open";
+
+// Resets mínimos específicos de esta página
+:root {
+  // Fallbacks por si las variables no existen
+  --c-text: #222;
+  --c-muted: #666;
+  --c-border: #eaeaea;
+  --c-primary: #0b67ff;
+  --radius: 12px;
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body { 
+  color: var(--c-text);
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.6;
+  background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
+  min-height: 100vh;
+}

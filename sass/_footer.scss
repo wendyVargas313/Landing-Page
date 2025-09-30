@@ -1,0 +1,87 @@
+/* Utilidad para ocultar solo visualmente (accesibilidad) */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Contenedor del footer (si tu footer ya tiene estilos, añade solo lo necesario) */
+footer {
+  --footer-max: 1100px;
+  --footer-pad: clamp(16px, 3vw, 32px);
+  background: #0f1115; /* o usa tu token */
+  color: #e9edf1;
+  padding: var(--footer-pad) var(--footer-pad) calc(var(--footer-pad) * 1.25);
+}
+
+.footer-banners {
+  margin-top: clamp(12px, 2vw, 20px);
+}
+
+.banners-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(12px, 2.5vw, 24px);
+  max-width: var(--footer-max);
+  margin-inline: auto;
+}
+
+/* Tarjeta/banner clickeable */
+.banner {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b0d11;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  /* Mantén proporción incluso si no hay height en el <img> */
+  aspect-ratio: 2 / 1; /* 2:1 */
+  isolation: isolate;
+}
+
+/* Imagen siempre cubre el contenedor con suavidad */
+.banner img, .banner picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Micro-interacción elegante */
+.banner:hover,
+.banner:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+}
+
+/* Efecto “toque pro”: arranca levemente desaturado, a color al hover */
+.banner img {
+  filter: saturate(.9) contrast(1.02);
+  transition: filter .25s ease;
+}
+.banner:hover img,
+.banner:focus-visible img {
+  filter: none;
+}
+
+/* Responsivo */
+@media (max-width: 860px) {
+  .banners-grid { grid-template-columns: 1fr; }
+  .banner { aspect-ratio: 16 / 9; } /* en móvil se ve mejor 16:9 */
+}
+
+/* Espaciado del bloque legal debajo de los banners */
+footer > nav {
+  max-width: var(--footer-max);
+  margin: 20px auto 0;
+}
+footer > nav ul {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  padding: 0; margin: 0; list-style: none;
+}
+footer > nav a {
+  color: #b9c3cf; text-decoration: none;
+}
+footer > nav a:hover { text-decoration: underline; }
